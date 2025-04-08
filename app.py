@@ -1,5 +1,5 @@
 import gradio as gr
-from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.document_loaders import DirectoryLoader, TextLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import tempfile
 import shutil
 import git
+import glob
 
 # Load environment variables
 load_dotenv()
@@ -32,12 +33,26 @@ def clone_repo(repo_url, branch="main"):
 
 def load_documents(repo_path):
     """Load documents from the repository"""
-    loader = DirectoryLoader(
-        repo_path,
-        glob="**/*.txt",  # Adjust pattern based on your file types
-        loader_cls=TextLoader
-    )
-    documents = loader.load()
+    documents = []
+    
+    # Define the base path for financial reports
+    base_path = os.path.join(repo_path, "financial-reports", "companies")
+    
+    # Get all company folders
+    company_folders = glob.glob(os.path.join(base_path, "*"))
+    
+    for company_folder in company_folders:
+        # Get all PDF files in the company folder
+        pdf_files = glob.glob(os.path.join(company_folder, "*.pdf"))
+        
+        for pdf_file in pdf_files:
+            try:
+                # Load PDF file
+                loader = PyPDFLoader(pdf_file)
+                documents.extend(loader.load())
+            except Exception as e:
+                print(f"Error loading {pdf_file}: {str(e)}")
+    
     return documents
 
 def create_vector_store(documents):
@@ -58,6 +73,9 @@ def setup_rag():
     
     # Load and process documents
     documents = load_documents(repo_path)
+    if not documents:
+        raise ValueError("No documents found in the repository. Please check the folder structure and file formats.")
+    
     vector_store = create_vector_store(documents)
     
     # Create the QA chain
