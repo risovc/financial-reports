@@ -68,8 +68,8 @@ def load_documents(repo_path):
     global INIT_ERROR
     documents = []
     
-    # Define the base path for financial reports
-    base_path = os.path.join(repo_path, "financial-reports", "companies")
+    # Define the base path for financial reports - updated to match actual structure
+    base_path = os.path.join(repo_path, "companies")
     logger.info(f"Looking for documents in: {base_path}")
     
     if not os.path.exists(base_path):
