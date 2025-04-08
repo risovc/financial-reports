@@ -28,7 +28,8 @@ llm = HuggingFaceEndpoint(
     repo_id="google/flan-t5-small",
     huggingfacehub_api_token=os.getenv("HUGGINGFACE_API_TOKEN"),
     task="text2text-generation",
-    model_kwargs={"temperature": 0.5, "max_length": 512}
+    temperature=0.5,
+    model_kwargs={"max_length": 512}
 )
 
 def clone_repo(repo_url, branch="main"):
