@@ -5,4 +5,5 @@ faiss-cpu==1.7.4
 sentence-transformers==2.5.1
 python-dotenv==1.0.1
 gitpython==3.1.42
-huggingface-hub==0.21.4 
+huggingface-hub==0.21.4
+PyPDF2==3.0.1 
