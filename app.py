@@ -35,13 +35,21 @@ def initialize_models():
         if not api_token:
             raise ValueError("HUGGINGFACE_API_TOKEN environment variable is not set")
             
-        # Initialize the language model
+        # Initialize the language model with simpler configuration
         llm = HuggingFaceEndpoint(
-            repo_id="google/flan-t5-small",
+            repo_id="facebook/bart-large-cnn",
             huggingfacehub_api_token=api_token,
-            task="text2text-generation",
-            temperature=0.5,
-            model_kwargs={"max_length": 512}
+            task="summarization",
+            temperature=0.7,
+            max_length=512,
+            min_length=50,
+            do_sample=True,
+            model_kwargs={
+                "early_stopping": True,
+                "num_beams": 4,
+                "length_penalty": 2.0,
+                "no_repeat_ngram_size": 3
+            }
         )
         
         return embeddings, llm
