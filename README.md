@@ -54,7 +54,7 @@ This is a Retrieval-Augmented Generation (RAG) application that allows users to 
 ## Technical Details
 
 - Embedding Model: sentence-transformers/all-MiniLM-L6-v2
-- Language Model: google/flan-t5-small
+- Language Model: mistralai/Mistral-7B-Instruct-v0.1
 - Vector Store: FAISS
 - Framework: LangChain
 - UI: Gradio
@@ -68,5 +68,8 @@ This is a Retrieval-Augmented Generation (RAG) application that allows users to 
 ## Limitations
 
 - The application works best with text-based financial reports
-- Large PDF files need to be converted to text format
 - The model has a context window limitation, so very long documents are chunked 
+
+## Demo
+
+Model is hosted on hugging face you can [try the same](https://huggingface.co/spaces/Risov/financial-rag-app)
