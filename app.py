@@ -27,31 +27,26 @@ def initialize_models():
     """Initialize the embedding and language models"""
     global INIT_ERROR
     try:
-        # Initialize the embedding model
         embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-        
-        # Check for API token
+
         api_token = os.getenv("HUGGINGFACE_API_TOKEN")
         if not api_token:
             raise ValueError("HUGGINGFACE_API_TOKEN environment variable is not set")
-            
-        # Initialize the language model with simpler configuration
+
+        # --- CHANGE THE REPO_ID and potentially remove task/kwargs ---
         llm = HuggingFaceEndpoint(
-            repo_id="facebook/bart-large-cnn",
+            # repo_id="google/flan-t5-large",  # Example: Use Flan-T5
+            repo_id="mistralai/Mistral-7B-Instruct-v0.1", # Example: Use Mistral Instruct
             huggingfacehub_api_token=api_token,
-            task="summarization",
-            temperature=0.7,
-            max_length=512,
-            min_length=50,
-            do_sample=True,
-            model_kwargs={
-                "early_stopping": True,
-                "num_beams": 4,
-                "length_penalty": 2.0,
-                "no_repeat_ngram_size": 3
-            }
+            task="text-generation", # Often inferred, but can be set
+            temperature=0.7,         # Adjust temperature as needed
+            max_new_tokens=512,      # Use max_new_tokens for generative models
+            # Remove or adjust model_kwargs based on the new model's capabilities
+            # You might not need any specific model_kwargs initially
+            # model_kwargs={ } 
         )
-        
+        # --- END CHANGE ---
+
         return embeddings, llm
     except Exception as e:
         INIT_ERROR = f"Model initialization failed: {str(e)}"
